@@ -38,7 +38,7 @@ const App = () => {
       if (!res.data.removed) {
         messageApi.open({
           type: 'error',
-          content: 'Nie można usunąć wybranego zadania'
+          content: 'Cannot remove picked task'
         });
         return;
       }
@@ -62,10 +62,10 @@ const App = () => {
           onFinish={addNewTask}
         >
           <Form.Item name="task_desc">
-            <Input.TextArea style={{ width: '400px' }} placeholder='Nowe zadanie' autoSize={true} />
+            <Input.TextArea style={{ width: '400px' }} placeholder='New task' autoSize={true} />
           </Form.Item>
           <Form.Item name="add_task">
-            <Button type="primary" htmlType="submit">Dodaj</Button>
+            <Button type="primary" htmlType="submit">Add</Button>
           </Form.Item>
         </Form>
       </Space>
