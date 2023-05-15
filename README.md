@@ -1,2 +1,14 @@
-# DBProject-ToDoList
-Simple "To Do List" written in JS by using yarn and npm and also is contain with data base.
+# TO DO List
+
+## Uruchomienie projektu na porcie 5000
+
+```bash
+yarn install
+yarn run
+```
+
+## Zbudowanie frontendu aplikacji
+
+```bash
+yarn build
+```
