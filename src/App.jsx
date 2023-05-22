@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Checkbox, Input, List, Typography, Space, Form, message } from 'antd'
+import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge } from 'antd'
 import { DeleteOutlined, PlusCircleTwoTone } from '@ant-design/icons';
 import { useLoaderData } from 'react-router-dom';
 
@@ -13,15 +13,19 @@ const App = () => {
 
   const addNewTask = (values) => {
     const taskDesc = values.task_desc;
+    const taskAge = values.task_age;
+    const taskLocation = values.task_location;
 
-    if (!taskDesc) {
+    if (!taskDesc || !taskAge || !taskLocation) {
       return;
     }
 
     newTaskForm.resetFields();
 
     axios.post('/tasks/create', {
-      desc: taskDesc
+      desc: taskDesc,
+      age: taskAge,
+      location: taskLocation
     }
     ).then((res) => {
       setTasksList((currentTasksList) => {
@@ -54,19 +58,26 @@ const App = () => {
   const TaskAdder = () => {
     return (
       <Space>
-        <PlusCircleTwoTone />
         <Form
           name="new_task_form"
           form={newTaskForm}
           layout="inline"
           onFinish={addNewTask}
         >
-          <Form.Item name="task_desc">
-            <Input.TextArea style={{ width: '400px' }} placeholder='New task' autoSize={true} />
-          </Form.Item>
-          <Form.Item name="add_task">
-            <Button type="primary" htmlType="submit">Add</Button>
-          </Form.Item>
+          <Space direction="vertical" size={8} align='center'>
+            <Form.Item name="add_task">
+              <Button type="primary" htmlType="submit">Add customer</Button>
+            </Form.Item>
+            <Form.Item name="task_desc">
+              <Input.TextArea style={{ width: '400px' }} placeholder='Name' autoSize={true} />
+            </Form.Item>
+            <Form.Item name="task_age">
+              <Input.TextArea style={{ width: '400px' }} placeholder='Age' autoSize={true} />
+            </Form.Item>
+            <Form.Item name="task_location">
+              <Input.TextArea style={{ width: '400px' }} placeholder='Location' autoSize={true} />
+            </Form.Item>
+          </Space>
         </Form>
       </Space>
     );
@@ -80,7 +91,7 @@ const App = () => {
           <img src="/vite.svg" className="logo" alt="Vite logo" />
         </a>
       </div>
-      <Typography.Title level={1}>2DO LIST</Typography.Title>
+      <Typography.Title level={1}>Database Project</Typography.Title>
 
       <List
         style={{ width: '800px' }}
@@ -94,8 +105,8 @@ const App = () => {
               <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
             ]}
           >
-            <Checkbox checked={item.done} />
-            <Input.TextArea bordered={false} value={item.desc} autoSize={true} />
+            <Badge count={item.id}></Badge>
+            <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.location}`} autoSize={true} />
           </List.Item>
         )}
       />

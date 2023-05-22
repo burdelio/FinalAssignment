@@ -5,9 +5,11 @@ const getAllTasks = async () => {
     return data;
 }
 
-const createTask = async (description) => {
+const createTask = async (iDesc, iAge, iLoc) => {
     const task = {
-        desc: description,
+        desc: iDesc,
+        age: iAge,
+        location: iLoc,
         done: false,
     }
 

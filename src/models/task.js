@@ -3,6 +3,8 @@ import { DataTypes } from 'sequelize';
 
 const Task = db.define('tasks', {
     desc: DataTypes.STRING,
+    age: DataTypes.INTEGER,
+    location: DataTypes.STRING,
     done: DataTypes.BOOLEAN,
 });
 

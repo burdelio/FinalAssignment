@@ -8,8 +8,10 @@ const getAll = async (req, res) => {
 
 const create = async (req, res) => {
     const desc = req.body.desc;
+    const age = req.body.age;
+    const location = req.body.location;
     try {
-        const data = await createTask(desc);
+        const data = await createTask(desc, age, location);
         res.send(data);
     } catch (err) {
         res.status(500).send({ message: err })
