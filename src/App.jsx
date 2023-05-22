@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge } from 'antd'
+import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip } from 'antd'
 import { DeleteOutlined, PlusCircleTwoTone } from '@ant-design/icons';
 import { useLoaderData } from 'react-router-dom';
 
@@ -66,7 +66,7 @@ const App = () => {
         >
           <Space direction="vertical" size={8} align='center'>
             <Form.Item name="add_task">
-              <Button type="primary" htmlType="submit">Add customer</Button>
+              <Button type="primary" htmlType="submit" >Add customer</Button>
             </Form.Item>
             <Form.Item name="task_desc">
               <Input.TextArea style={{ width: '400px' }} placeholder='Name' autoSize={true} />
@@ -105,8 +105,12 @@ const App = () => {
               <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
             ]}
           >
-            <Badge count={item.id}></Badge>
-            <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.location}`} autoSize={true} />
+            <Tooltip title="ID" color={'#1890ff'}>
+              <Badge count={item.id}></Badge>
+            </Tooltip>
+            <Tooltip title="Name, Age, Location" color={'#1890ff'}>
+              <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.location}`} autoSize={true} />
+            </Tooltip>
           </List.Item>
         )}
       />
