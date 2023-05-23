@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip } from 'antd'
+import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip, Card, Select } from 'antd'
 import { DeleteOutlined, PlusCircleTwoTone } from '@ant-design/icons';
 import { useLoaderData } from 'react-router-dom';
 
 import './App.css'
 import axios from 'axios';
+import options from './configs/menu';
+import orderMethod from './configs/orderMethod';
 
 const App = () => {
   const [tasksList, setTasksList] = useState(useLoaderData().data)
@@ -14,9 +16,10 @@ const App = () => {
   const addNewTask = (values) => {
     const taskDesc = values.task_desc;
     const taskAge = values.task_age;
+    const taskGender = values.task_gender;
     const taskLocation = values.task_location;
 
-    if (!taskDesc || !taskAge || !taskLocation) {
+    if (!taskDesc || !taskAge || !taskLocation || !taskGender) {
       return;
     }
 
@@ -25,6 +28,7 @@ const App = () => {
     axios.post('/tasks/create', {
       desc: taskDesc,
       age: taskAge,
+      gender: taskGender,
       location: taskLocation
     }
     ).then((res) => {
@@ -66,16 +70,50 @@ const App = () => {
         >
           <Space direction="vertical" size={8} align='center'>
             <Form.Item name="add_task">
-              <Button type="primary" htmlType="submit" >Add customer</Button>
+              <Button type="primary" htmlType="submit" >Add staff</Button>
             </Form.Item>
             <Form.Item name="task_desc">
               <Input.TextArea style={{ width: '400px' }} placeholder='Name' autoSize={true} />
             </Form.Item>
             <Form.Item name="task_age">
-              <Input.TextArea style={{ width: '400px' }} placeholder='Age' autoSize={true} />
+              <Input style={{ width: '400px' }} placeholder='Age' autoSize={true} type="number" />
+            </Form.Item>
+            <Form.Item name="task_gender">
+              <Input.TextArea style={{ width: '400px' }} placeholder='Gender' autoSize={true} />
             </Form.Item>
             <Form.Item name="task_location">
               <Input.TextArea style={{ width: '400px' }} placeholder='Location' autoSize={true} />
+            </Form.Item>
+          </Space>
+        </Form>
+      </Space>
+    );
+  }
+
+  const OrderAdder = () => {
+    return (
+      <Space>
+        <Form
+          // name="new_task_form"
+          // form={newTaskForm}
+          layout="inline"
+        // onFinish={addNewTask} // dodac funkcje do dodania orderu
+        >
+          <Space direction="vertical" size={8} align='center'>
+            <Form.Item name="add_order">
+              <Button type="primary" htmlType="submit" >Order</Button>
+            </Form.Item>
+            <Form.Item name="task_desc">
+              <Select options={options}
+                style={{ width: '400px', textAlign: 'left' }}
+                placeholder='Name'
+              ></Select>
+            </Form.Item>
+            <Form.Item name="task_price">
+              <Input style={{ width: '400px' }} placeholder={'Price'} autoSize={true} disabled={true} />
+            </Form.Item>
+            <Form.Item name="task_PM">
+              <Select options={orderMethod} style={{ width: '400px', textAlign: 'left' }} placeholder='Payment type' ></Select>
             </Form.Item>
           </Space>
         </Form>
@@ -93,27 +131,53 @@ const App = () => {
       </div>
       <Typography.Title level={1}>Database Project</Typography.Title>
 
-      <List
-        style={{ width: '800px' }}
-        bordered={true}
-        footer={<TaskAdder />}
-        dataSource={tasksList}
-        renderItem={(item) => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
-            ]}
-          >
-            <Tooltip title="ID" color={'#1890ff'}>
-              <Badge count={item.id}></Badge>
-            </Tooltip>
-            <Tooltip title="Name, Age, Location" color={'#1890ff'}>
-              <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.location}`} autoSize={true} />
-            </Tooltip>
-          </List.Item>
-        )}
-      />
+      <Space direction="vertical" size={16}>
+        <Space wrap size={16}>
+          <List
+            style={{ width: '500px' }}
+            bordered={true}
+            footer={<OrderAdder />}
+            //dataSource={tasksList}
+            renderItem={(item) => (
+              <List.Item
+                key={item.id}
+                actions={[
+                  <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
+                ]}
+              >
+                <Tooltip title="ID" color={'#1890ff'}>
+                  <Badge count={item.id}></Badge>
+                </Tooltip>
+                <Tooltip title="Name, Age, Location" color={'#1890ff'}>
+                  <Input.TextArea bordered={false} value={``} autoSize={true} />
+                </Tooltip>
+              </List.Item>
+            )}
+          />
+
+          <List
+            style={{ width: '500px' }}
+            bordered={true}
+            footer={<TaskAdder />}
+            dataSource={tasksList}
+            renderItem={(item) => (
+              <List.Item
+                key={item.id}
+                actions={[
+                  <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
+                ]}
+              >
+                <Tooltip title="ID" color={'#1890ff'}>
+                  <Badge count={item.id}></Badge>
+                </Tooltip>
+                <Tooltip title="Name, Age, Location" color={'#1890ff'}>
+                  <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.gender}, ${item.location}`} autoSize={true} />
+                </Tooltip>
+              </List.Item>
+            )}
+          />
+        </Space>
+      </Space>
     </div>
   )
 }

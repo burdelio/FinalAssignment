@@ -9,9 +9,10 @@ const getAll = async (req, res) => {
 const create = async (req, res) => {
     const desc = req.body.desc;
     const age = req.body.age;
+    const gender = req.body.gender;
     const location = req.body.location;
     try {
-        const data = await createTask(desc, age, location);
+        const data = await createTask(desc, age, gender, location);
         res.send(data);
     } catch (err) {
         res.status(500).send({ message: err })
