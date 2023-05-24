@@ -7,11 +7,17 @@ import './App.css'
 import axios from 'axios';
 import options from './configs/menu';
 import orderMethod from './configs/orderMethod';
+import delivery from './configs/delivery';
 
 const App = () => {
   const [tasksList, setTasksList] = useState(useLoaderData().data)
   const [newTaskForm] = Form.useForm();
   const [messageApi, messageContextHolder] = message.useMessage();
+  const [onlineOrder, setOnlineOrder] = useState(false);
+
+  const optionChecked = (e) => {
+    setOnlineOrder(e.target.checked);
+  }
 
   const addNewTask = (values) => {
     const taskDesc = values.task_desc;
@@ -70,7 +76,7 @@ const App = () => {
         >
           <Space direction="vertical" size={8} align='center'>
             <Form.Item name="add_task">
-              <Button type="primary" htmlType="submit" >Add staff</Button>
+              <Button type="primary" htmlType="submit" >Add</Button>
             </Form.Item>
             <Form.Item name="task_desc">
               <Input.TextArea style={{ width: '400px' }} placeholder='Name' autoSize={true} />
@@ -115,9 +121,24 @@ const App = () => {
             <Form.Item name="task_PM">
               <Select options={orderMethod} style={{ width: '400px', textAlign: 'left' }} placeholder='Payment type' ></Select>
             </Form.Item>
+            <Form.Item>
+              <Checkbox checked={onlineOrder} style={{ width: '400px', textAlign: 'left' }} onChange={optionChecked}>
+                Online Order
+                {onlineOrder &&
+                  <Space direction="vertical" size={8} align='center'>
+                    <Form.Item>
+                      <Input style={{ width: '377px', textAlign: 'left' }} placeholder={'Area'} autoSize={true}></Input>
+                    </Form.Item>
+                    <Form.Item>
+                      <Select options={delivery} style={{ width: '377px', textAlign: 'left' }} placeholder='Select Deliver' ></Select>
+                    </Form.Item>
+                  </Space>
+                }
+              </Checkbox>
+            </Form.Item>
           </Space>
-        </Form>
-      </Space>
+        </Form >
+      </Space >
     );
   }
 
