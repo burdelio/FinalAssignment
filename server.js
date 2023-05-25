@@ -10,7 +10,7 @@ const port = 5000;
 app.use(cors());
 app.use(express.static('dist'));
 app.use(express.json());
-app.use('/', router);
+app.use('/api', router);
 
 db.sync({ force: true })
     .then(() => { console.log('Drop and sync DB'); })

@@ -6,20 +6,28 @@ import './main.css'
 
 import LoginForm from './forms/loginPage'
 
-function MainApp() {
+const isLogged = () => {
+  return sessionStorage.getItem('logged');
+};
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+function MainApp() {
+  const [isLoggedIn, setIsLoggedIn] = useState(isLogged);
+
+  const saveUser = () => {
+    sessionStorage.setItem('logged', true);
+    setIsLoggedIn(true);
+  };
 
   return (
     <StrictMode>
-      {isLoggedIn === false && <LoginForm setIsLoggedIn={setIsLoggedIn} />}
-      {isLoggedIn === true && <Providers><App /></Providers>}
+      {!isLoggedIn
+        ? <LoginForm saveUser={saveUser} />
+        : <Providers><App /></Providers>
+      }
     </StrictMode>
   );
 }
 
 ReactDOM.createRoot(document.getElementById('todo')).render(
   <MainApp />
-)
-
-export default MainApp;
+);

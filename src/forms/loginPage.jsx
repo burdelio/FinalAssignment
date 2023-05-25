@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Alert, Card } from 'antd';
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = ({ saveUser }) => {
     const [form] = Form.useForm();
     const [errorMessage, setErrorMessage] = useState('');
 
@@ -19,7 +19,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
         if (user) {
             // Użytkownik uwierzytelniony - możesz wykonać odpowiednie akcje, np. przekierowanie do panelu użytkownika
             alert('Logged in!', user.email);
-            setIsLoggedIn(true);
+            saveUser();
             setErrorMessage('');
         } else {
             // Nieprawidłowe dane logowania
@@ -28,7 +28,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <Card title="Login">
+        <Card title="Login" style={{ maxWidth: 320, margin: 'auto' }}>
             <Form form={form} onFinish={handleSubmit}>
                 <Form.Item
                     label="Email"

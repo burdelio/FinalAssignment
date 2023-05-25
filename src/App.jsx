@@ -1,23 +1,30 @@
-import { useState } from 'react'
-import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip, Select } from 'antd'
-import { DeleteOutlined, PlusCircleTwoTone } from '@ant-design/icons';
-import { useLoaderData } from 'react-router-dom';
+import { useState } from 'react';
+import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Button, Input, List, Typography, Space, Form, message, Badge, Tooltip } from 'antd';
+import { DeleteOutlined, HomeOutlined, PieChartOutlined, UserOutlined, TeamOutlined, DesktopOutlined } from '@ant-design/icons';
+import { Link, Outlet, useLoaderData } from 'react-router-dom';
 
 import './App.css'
 import axios from 'axios';
-import options from './configs/menu';
-import orderMethod from './configs/orderMethod';
-import delivery from './configs/delivery';
+
+const { Header, Content, Sider } = Layout;
+
+const items = [
+  { key: 1, label: (<Link to='/'>Home</Link>), icon: <HomeOutlined /> },
+  { key: 2, label: (<Link to='customers'>Customers</Link>), icon: <UserOutlined /> },
+  { key: 3, label: (<Link to='orders'>Orders</Link>), icon: <UserOutlined /> },
+];
 
 const App = () => {
+  const [menuCollapsed, setMenuCollapsed] = useState(false);
+
   const [tasksList, setTasksList] = useState(useLoaderData().data)
   const [newTaskForm] = Form.useForm();
   const [messageApi, messageContextHolder] = message.useMessage();
-  const [onlineOrder, setOnlineOrder] = useState(false);
 
-  const optionChecked = (e) => {
-    setOnlineOrder(e.target.checked);
-  }
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken();
 
   const addNewTask = (values) => {
     const taskDesc = values.task_desc;
@@ -31,7 +38,7 @@ const App = () => {
 
     newTaskForm.resetFields();
 
-    axios.post('/tasks/create', {
+    axios.post('/api/tasks/create', {
       desc: taskDesc,
       age: taskAge,
       gender: taskGender,
@@ -46,7 +53,7 @@ const App = () => {
   }
 
   const deleteTask = (id) => {
-    axios.delete('/tasks/delete', {
+    axios.delete('/api/tasks/delete', {
       data: { id: id }
     }).then((res) => {
       if (!res.data.removed) {
@@ -96,111 +103,70 @@ const App = () => {
     );
   }
 
-  const OrderAdder = () => {
-    return (
-      <Space>
-        <Form
-          // name="new_task_form"
-          // form={newTaskForm}
-          layout="inline"
-        // onFinish={addNewTask} // dodac funkcje do dodania orderu
-        >
-          <Space direction="vertical" size={8} align='center'>
-            <Form.Item name="add_order">
-              <Button type="primary" htmlType="submit" >Order</Button>
-            </Form.Item>
-            <Form.Item name="task_desc">
-              <Select options={options}
-                style={{ width: '400px', textAlign: 'left' }}
-                placeholder='Name'
-              ></Select>
-            </Form.Item>
-            <Form.Item name="task_price">
-              <Input style={{ width: '400px' }} placeholder={'Price'} autoSize={true} disabled={true} />
-            </Form.Item>
-            <Form.Item name="task_PM">
-              <Select options={orderMethod} style={{ width: '400px', textAlign: 'left' }} placeholder='Payment type' ></Select>
-            </Form.Item>
-            <Form.Item>
-              <Checkbox checked={onlineOrder} style={{ width: '400px', textAlign: 'left' }} onChange={optionChecked}>
-                Online Order
-                {onlineOrder &&
-                  <Space direction="vertical" size={8} align='center'>
-                    <Form.Item>
-                      <Input style={{ width: '377px', textAlign: 'left' }} placeholder={'Area'} autoSize={true}></Input>
-                    </Form.Item>
-                    <Form.Item>
-                      <Select options={delivery} style={{ width: '377px', textAlign: 'left' }} placeholder='Select Deliver' ></Select>
-                    </Form.Item>
-                  </Space>
-                }
-              </Checkbox>
-            </Form.Item>
-          </Space>
-        </Form >
-      </Space >
-    );
-  }
-
   return (
-    <div className="App">
-      {messageContextHolder}
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-      </div>
-      <Typography.Title level={1}>Database Project</Typography.Title>
+    <Layout
+      style={{
+        minHeight: '100vh',
+      }}
+    >
+      <Sider collapsible collapsed={menuCollapsed} onCollapse={(value) => setMenuCollapsed(value)}>
+        <div className="demo-logo-vertical" />
+        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+      </Sider>
+      <Layout>
+        <Header
+          style={{
+            padding: 0,
+            background: colorBgContainer,
+          }}
+        />
+        <Content className='content'>
+          <Breadcrumb
+            style={{
+              margin: '16px 0',
+            }}
+          >
+            <Breadcrumb.Item>User</Breadcrumb.Item>
+            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+          </Breadcrumb>
+          <div className="App">
+            {messageContextHolder}
+            <div>
+              <a href="https://vitejs.dev" target="_blank" rel='noreferrer'>
+                <img src="/vite.svg" className="logo" alt="Vite logo" />
+              </a>
+            </div>
+            <Typography.Title level={1}>Database Project</Typography.Title>
 
-      <Space direction="vertical" size={16}>
-        <Space wrap size={16}>
-          <List
-            style={{ width: '500px' }}
-            bordered={true}
-            footer={<OrderAdder />}
-            //dataSource={tasksList}
-            renderItem={(item) => (
-              <List.Item
-                key={item.id}
-                actions={[
-                  <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
-                ]}
-              >
-                <Tooltip title="ID" color={'#1890ff'}>
-                  <Badge count={item.id}></Badge>
-                </Tooltip>
-                <Tooltip title="Name, Age, Location" color={'#1890ff'}>
-                  <Input.TextArea bordered={false} value={``} autoSize={true} />
-                </Tooltip>
-              </List.Item>
-            )}
-          />
+            <Outlet />
+            <Space wrap size={16}>
+              <List
+                style={{ width: '500px' }}
+                bordered={true}
+                footer={<TaskAdder />}
+                dataSource={tasksList}
+                renderItem={(item) => (
+                  <List.Item
+                    key={item.id}
+                    actions={[
+                      <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
+                    ]}
+                  >
+                    <Tooltip title="ID" color={'#1890ff'}>
+                      <Badge count={item.id}></Badge>
+                    </Tooltip>
+                    <Tooltip title="Name, Age, Location" color={'#1890ff'}>
+                      <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.gender}, ${item.location}`} autoSize={true} />
+                    </Tooltip>
+                  </List.Item>
+                )}
+              />
+            </Space>
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
 
-          <List
-            style={{ width: '500px' }}
-            bordered={true}
-            footer={<TaskAdder />}
-            dataSource={tasksList}
-            renderItem={(item) => (
-              <List.Item
-                key={item.id}
-                actions={[
-                  <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
-                ]}
-              >
-                <Tooltip title="ID" color={'#1890ff'}>
-                  <Badge count={item.id}></Badge>
-                </Tooltip>
-                <Tooltip title="Name, Age, Location" color={'#1890ff'}>
-                  <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.gender}, ${item.location}`} autoSize={true} />
-                </Tooltip>
-              </List.Item>
-            )}
-          />
-        </Space>
-      </Space>
-    </div>
-  )
-}
-
-export default App
+export default App;

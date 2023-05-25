@@ -1,8 +1,17 @@
-#todo {
-  max-width: 1280px;
+.ant-layout-header {
+  border-bottom: 1px solid lightblue;
+}
+
+.ant-layout {
+  background-color: white;
+}
+
+.content {
+  margin: 0 16px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  background: white;
 }
 
 .logo {
