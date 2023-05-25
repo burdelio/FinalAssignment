@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip, Card, Select } from 'antd'
+import { Button, Checkbox, Input, List, Typography, Space, Form, message, Badge, Tooltip, Select } from 'antd'
 import { DeleteOutlined, PlusCircleTwoTone } from '@ant-design/icons';
 import { useLoaderData } from 'react-router-dom';
 
@@ -76,7 +76,7 @@ const App = () => {
         >
           <Space direction="vertical" size={8} align='center'>
             <Form.Item name="add_task">
-              <Button type="primary" htmlType="submit" >Add</Button>
+              <Button type="primary" htmlType="submit" >Add Customer</Button>
             </Form.Item>
             <Form.Item name="task_desc">
               <Input.TextArea style={{ width: '400px' }} placeholder='Name' autoSize={true} />
