@@ -1,16 +1,34 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card } from 'antd';
+import { Form, Input, Button, Alert, Card } from 'antd';
 
 const LoginForm = ({ setIsLoggedIn }) => {
     const [form] = Form.useForm();
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleSubmit = (values) => {
-        // Tutaj możesz wykonać żądanie HTTP lub inne operacje, np. sprawdzanie poprawności danych logowania
-        setIsLoggedIn(true)
+        // Sprawdzanie danych logowania w bazie
+        const users = [
+            { email: 'essa@dbms.com', password: 'pass1' },
+            { email: 'bedi2115@dbms.com', password: 'helloworld' },
+            { email: 'kokspl@dbms.com', password: 'jdxd' },
+            { email: 'admin@t.com', password: 'admin' },
+        ];
+
+        const user = users.find((user) => user.email === values.email && user.password === values.password);
+
+        if (user) {
+            // Użytkownik uwierzytelniony - możesz wykonać odpowiednie akcje, np. przekierowanie do panelu użytkownika
+            alert('Logged in!', user.email);
+            setIsLoggedIn(true);
+            setErrorMessage('');
+        } else {
+            // Nieprawidłowe dane logowania
+            setErrorMessage('Wrong e-mail or password');
+        }
     };
 
     return (
-        <Card title={"Login"}>
+        <Card title="Login">
             <Form form={form} onFinish={handleSubmit}>
                 <Form.Item
                     label="Email"
@@ -26,10 +44,12 @@ const LoginForm = ({ setIsLoggedIn }) => {
                 <Form.Item
                     label="Password"
                     name="password"
-                    rules={[{ required: true, message: 'Enter passoword' }]}
+                    rules={[{ required: true, message: 'Enter password' }]}
                 >
                     <Input.Password />
                 </Form.Item>
+
+                {errorMessage && <Alert type="error" message={errorMessage} />}
 
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
