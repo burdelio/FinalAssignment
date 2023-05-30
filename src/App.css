@@ -1,5 +1,13 @@
 .ant-layout-header {
+  display: flex;
   border-bottom: 1px solid lightblue;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.ant-layout-header button {
+  margin-right: 20px;
 }
 
 .ant-layout {
@@ -22,4 +30,8 @@
 
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
+}
+
+.logoutbutton {
+  width: 40 px;
 }
