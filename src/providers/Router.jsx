@@ -14,17 +14,21 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/orders',
-                element: <Orders />
+                element: <Orders />,
+                loader: async () => {
+                    const data = await axios.get('/api/orders/all');
+                    return data;
+                }
             },
             {
                 path: '/customers',
-                element: <Customers />
+                element: <Customers />,
+                loader: async () => {
+                    const data = await axios.get('/api/tasks/all');
+                    return data;
+                }
             }
         ],
-        loader: async () => {
-            const data = await axios.get('/api/tasks/all');
-            return data;
-        }
     },
 ]);
 

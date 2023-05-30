@@ -1,11 +1,14 @@
 import AntProvider from "./Ant";
 import RouterProvider from "./Router";
+import { AuthProvider } from './Auth';
 
 const Providers = () => {
     return (
-        <AntProvider>
-            <RouterProvider />
-        </AntProvider>
+        <AuthProvider>
+            <AntProvider>
+                <RouterProvider />
+            </AntProvider>
+        </AuthProvider>
     );
 }
 

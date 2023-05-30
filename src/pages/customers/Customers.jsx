@@ -4,6 +4,7 @@ import { DeleteOutlined } from '@ant-design/icons';
 import { useLoaderData } from 'react-router-dom';
 
 import axios from 'axios';
+import DynamicTableContent from '../../components/DynamicTable/DynamicTableContent';
 
 const Customers = () => {
     const [newTaskForm] = Form.useForm();
@@ -86,29 +87,41 @@ const Customers = () => {
             </Space>
         );
     }
-    return (
-        <List
-            style={{ width: '500px' }}
-            bordered={true}
-            footer={<TaskAdder />}
+
+    const TaskColumns = [
+        {
+            title: "Name",
+            dataIndex: "desc",
+            align: "center",
+            editable: true,
+        },
+        {
+            title: "Age",
+            dataIndex: "age",
+            align: "center",
+            editable: true,
+        },
+        {
+            title: "Gender",
+            dataIndex: "gender",
+            align: "center",
+            editable: true,
+        },
+        {
+            title: "Location",
+            dataIndex: "location",
+            align: "center",
+            editable: true,
+        }
+    ];
+    return (<Space direction='vertical' size='large'>
+        <DynamicTableContent
             dataSource={tasksList}
-            renderItem={(item) => (
-                <List.Item
-                    key={item.id}
-                    actions={[
-                        <Button icon={<DeleteOutlined />} onClick={() => { deleteTask(item.id) }} />
-                    ]}
-                >
-                    <Tooltip title="ID" color={'#1890ff'}>
-                        <Badge count={item.id}></Badge>
-                    </Tooltip>
-                    <Tooltip title="Name, Age, Location" color={'#1890ff'}>
-                        <Input.TextArea bordered={false} value={`${item.desc}, ${item.age}, ${item.gender}, ${item.location}`} autoSize={true} />
-                    </Tooltip>
-                </List.Item>
-            )}
+            columns={TaskColumns}
+            handleCellSave={() => { }}
         />
-    );
+        <TaskAdder />
+    </Space>);
 }
 
 export default Customers;

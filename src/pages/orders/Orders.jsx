@@ -8,9 +8,11 @@ import orderMethod from '../../configs/orderMethod';
 import delivery from '../../configs/delivery';
 
 import axios from 'axios';
+import DynamicTableContent from '../../components/DynamicTable/DynamicTableContent';
 
 const Orders = () => {
     const [onlineOrder, setOnlineOrder] = useState(false);
+    const [area, setArea] = useState('');
 
     const optionChecked = (e) => {
         setOnlineOrder(e.target.checked);
@@ -20,17 +22,32 @@ const Orders = () => {
     const [OrdersList, setOrdersList] = useState(useLoaderData()?.data || []);
     const [messageApi, messageContextHolder] = message.useMessage();
 
+    const foodPick = () => {
+        const selectedLabel = newOrderForm.getFieldValue('Order_name');
+        const selectedOption = options.find(option => option.label === selectedLabel);
+        console.log(selectedOption);
+        if (selectedOption) {
+            const selectedPrice = selectedOption.price;
+            newOrderForm.setFieldValue('Order_price', selectedPrice)
+        }
+    };
+
     const addNewOrder = (values) => {
         const OrderName = values.Order_name;
         const OrderPrice = values.Order_price;
         const OrderPT = values.Order_PT;
-        const OrderIO = values.Order_IO;
+        const OrderIO = onlineOrder;
         const OrderArea = values.Order_area;
         const OrderDriver = values.Order_driver;
 
-        // if (!OrderName || !OrderPrice || !OrderPT) {
-        //     return;
-        // }
+        if (!OrderName || !OrderPrice || !OrderPT) {
+            return;
+        }
+        if (OrderIO === true) {
+            if (!OrderArea || !OrderDriver) {
+                return;
+            }
+        }
 
         newOrderForm.resetFields();
 
@@ -84,13 +101,16 @@ const Orders = () => {
                             <Button type="primary" htmlType="submit" >Order</Button>
                         </Form.Item>
                         <Form.Item name="Order_name">
-                            <Select options={options}
-                                style={{ width: '400px', textAlign: 'left' }}
-                                placeholder='Name'
-                            ></Select>
+                            <Select onChange={foodPick} style={{ width: '400px', textAlign: 'left' }} placeholder='Name'>
+                                {options.map(option => (
+                                    <Select.Option key={option.label} value={option.label}>
+                                        {option.label}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
                         <Form.Item name="Order_price">
-                            <Input style={{ width: '400px' }} placeholder={'Price'} autoSize={true} disabled={true} />
+                            <Input style={{ width: '400px' }} placeholder={'Price'} autoSize disabled />
                         </Form.Item>
                         <Form.Item name="Order_PT">
                             <Select options={orderMethod} style={{ width: '400px', textAlign: 'left' }} placeholder='Payment type' ></Select>
@@ -98,45 +118,93 @@ const Orders = () => {
                         <Form.Item>
                             <Checkbox name="Order_IO" checked={onlineOrder} style={{ width: '400px', textAlign: 'left' }} onChange={optionChecked}>
                                 Online Order
-                                {onlineOrder &&
-                                    <Space direction="vertical" size={8} align='center'>
-                                        <Form.Item name="Order_area">
-                                            <Input style={{ width: '377px', textAlign: 'left' }} placeholder={'Area'} autoSize={true}></Input>
-                                        </Form.Item>
-                                        <Form.Item name="Order_driver">
-                                            <Select options={delivery} style={{ width: '377px', textAlign: 'left' }} placeholder='Select Deliver' ></Select>
-                                        </Form.Item>
-                                    </Space>
-                                }
                             </Checkbox>
                         </Form.Item>
+                        {onlineOrder &&
+                            <Space direction="vertical" size={8} align='center'>
+                                <Form.Item name="Order_area">
+                                    <Input
+                                        style={{ width: '377px', textAlign: 'left' }}
+                                        placeholder={'Area'}
+                                        autoSize={true}
+                                        value={area}
+                                        onChange={(e) => setArea(e.target.value)}
+                                    />
+                                </Form.Item>
+                                <Form.Item name="Order_driver">
+                                    <Select
+                                        style={{ width: '377px', textAlign: 'left' }}
+                                        placeholder='Select Deliver'
+                                    >
+                                        {delivery
+                                            .filter((delivery) => delivery.area == area.trim())
+                                            .map((option) => (
+                                                <Select.Option key={option.ID} value={option.ID}>
+                                                    {option.label}
+                                                </Select.Option>
+                                            ))
+                                        }
+                                    </Select>
+                                </Form.Item>
+                            </Space>
+                        }
                     </Space>
                 </Form >
             </Space >
         );
     };
 
-    return (<List
-        style={{ width: '500px' }}
-        bordered={true}
-        footer={<OrderAdder />}
-        dataSource={OrdersList}
-        renderItem={(item) => (
-            <List.Item
-                key={item.id}
-                actions={[
-                    <Button icon={<DeleteOutlined />} onClick={() => { deleteOrder(item.id) }} />
-                ]}
-            >
-                <Tooltip title="ID" color={'#1890ff'}>
-                    <Badge count={item.id}></Badge>
-                </Tooltip>
-                <Tooltip title="Name, Price, Payment Type, Is Order Online, Area, Driver" color={'#1890ff'}>
-                    <Input.TextArea bordered={false} value={`${item.name}, ${item.price}, ${item.paymentType}, ${item.isOnline}, ${item.area}, ${item.driver}`} autoSize={true} />
-                </Tooltip>
-            </List.Item>
-        )}
-    />);
+    const OrderColumns = [
+        {
+            title: "Name",
+            dataIndex: "name",
+            align: "center",
+            editable: true,
+        },
+        {
+            title: "Price",
+            dataIndex: "price",
+            align: "center",
+        },
+        {
+            title: "Payment",
+            dataIndex: "paymentType",
+            align: "center",
+            editable: true,
+        },
+        {
+            title: "Online",
+            dataIndex: "isOnline",
+            align: "center",
+            type: 'bool',
+        },
+        {
+            title: "Area",
+            dataIndex: "area",
+            align: "center",
+        },
+        {
+            title: "Driver",
+            dataIndex: "driver",
+            align: "center",
+            render: (text) => {
+                if (text) {
+                    const driver = delivery.find((delivery) => delivery.ID == text)
+                    return driver.label;
+                } else {
+                    return '';
+                }
+            }
+        },
+    ];
+    return (<Space direction='vertical' size='large'>
+        <DynamicTableContent
+            dataSource={OrdersList}
+            columns={OrderColumns}
+            handleCellSave={() => { }}
+        />
+        <OrderAdder />
+    </Space>);
 }
 
 export default Orders;
