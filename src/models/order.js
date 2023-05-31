@@ -6,6 +6,7 @@ const Order = db.define('orders', {
     price: DataTypes.INTEGER,
     paymentType: DataTypes.STRING,
     executionDate: DataTypes.DATE,
+    isPremium: DataTypes.BOOLEAN,
     isOnline: DataTypes.BOOLEAN,
     area: DataTypes.STRING,
     driver: DataTypes.STRING

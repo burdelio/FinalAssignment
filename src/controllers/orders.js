@@ -11,11 +11,12 @@ const create = async (req, res) => {
     const price = req.body.price;
     const paymentType = req.body.paymentType;
     const executionDate = req.body.executionDate;
+    const isPremium = req.body.isPremium;
     const isOnline = req.body.isOnline;
     const area = req.body.area;
     const driver = req.body.driver;
     try {
-        const data = await createOrder(name, price, paymentType, executionDate, isOnline, area, driver);
+        const data = await createOrder(name, price, paymentType, executionDate, isPremium, isOnline, area, driver);
         res.send(data);
     } catch (err) {
         res.status(500).send({ message: err })

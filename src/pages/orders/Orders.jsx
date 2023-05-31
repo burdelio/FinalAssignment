@@ -17,6 +17,12 @@ const Orders = () => {
         setOnlineOrder(e.target.checked);
     }
 
+    const [premium, setPremium] = useState(false);
+
+    const checkPremium = (e) => {
+        setPremium(e.target.checked);
+    }
+
     const [newOrderForm] = Form.useForm();
     const [OrdersList, setOrdersList] = useState(useLoaderData()?.data || []);
     const [messageApi, messageContextHolder] = message.useMessage();
@@ -33,12 +39,14 @@ const Orders = () => {
 
     const addNewOrder = (values) => {
         const OrderName = values.Order_name;
-        const OrderPrice = values.Order_price;
+        let OrderPrice = values.Order_price;
         const OrderPT = values.Order_PT;
         const executionDate = new Date();
+        const OrderP = premium;
         const OrderIO = onlineOrder;
         const OrderArea = values.Order_area;
         const OrderDriver = values.Order_driver;
+        console.log(OrderP);
 
         if (!OrderName || !OrderPrice || !OrderPT) {
             return;
@@ -48,6 +56,9 @@ const Orders = () => {
                 return;
             }
         }
+        if (OrderP === true) {
+            OrderPrice = OrderPrice * 0.9;
+        }
 
         newOrderForm.resetFields();
 
@@ -56,6 +67,7 @@ const Orders = () => {
             price: OrderPrice,
             paymentType: OrderPT,
             executionDate: executionDate,
+            isPremium: OrderP,
             isOnline: OrderIO,
             area: OrderArea,
             driver: OrderDriver
@@ -117,6 +129,11 @@ const Orders = () => {
                             <Select options={orderMethod} style={{ width: '400px', textAlign: 'left' }} placeholder='Payment type' ></Select>
                         </Form.Item>
                         <Form.Item>
+                            <Checkbox name="Order_P" checked={premium} style={{ width: '400px', textAlign: 'left' }} onChange={checkPremium}>
+                                Premium
+                            </Checkbox>
+                        </Form.Item>
+                        <Form.Item>
                             <Checkbox name="Order_IO" checked={onlineOrder} style={{ width: '400px', textAlign: 'left' }} onChange={optionChecked}>
                                 Online Order
                             </Checkbox>
@@ -163,19 +180,20 @@ const Orders = () => {
         },
         {
             title: "Name",
-            width: 200,
+            width: 150,
             dataIndex: "name",
             align: "center",
             editable: true,
         },
         {
             title: "Price",
+            with: 100,
             dataIndex: "price",
             align: "center",
         },
         {
             title: "Payment",
-            width: 200,
+            width: 125,
             dataIndex: "paymentType",
             align: "center",
             editable: true,
@@ -191,6 +209,12 @@ const Orders = () => {
             },
         },
         {
+            title: "Premium",
+            dataIndex: "isPremium",
+            align: "center",
+            type: 'bool',
+        },
+        {
             title: "Online",
             dataIndex: "isOnline",
             align: "center",
@@ -203,6 +227,7 @@ const Orders = () => {
         },
         {
             title: "Driver",
+            width: 150,
             dataIndex: "driver",
             align: "center",
             render: (text) => {
