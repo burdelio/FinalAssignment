@@ -116,6 +116,16 @@ const Customers = () => {
             dataIndex: "location",
             align: "center",
             editable: true,
+        },
+        {
+            title: "Delete",
+            dataIndex: "actions",
+            align: "center",
+            render: (_, record) => (
+                <Button type="link" onClick={() => deleteTask(record.id)}>
+                    Delete
+                </Button>
+            )
         }
     ];
     return (<Space direction='vertical' size='large'>

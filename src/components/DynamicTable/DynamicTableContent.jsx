@@ -62,7 +62,7 @@ const DynamicTableContent = ({ dataSource, columns, handleCellSave }) => {
                 sticky
                 dataSource={dataSource}
                 columns={mappedCols}
-                style={{ maxWidth: '90%', margin: 'auto' }}
+                style={{ maxWidth: '95%', margin: 'auto' }}
                 pagination={false}
                 scroll={{ x: true }}
             />

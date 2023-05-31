@@ -200,7 +200,7 @@ const Orders = () => {
         },
         {
             title: "Date",
-            width: 200,
+            width: 175,
             dataIndex: "executionDate",
             align: "center",
             render: (text) => {
@@ -239,6 +239,17 @@ const Orders = () => {
                 }
             }
         },
+        {
+            title: "Delete",
+            width: 50,
+            dataIndex: "actions",
+            align: "center",
+            render: (_, record) => (
+                <Button type="link" onClick={() => deleteOrder(record.id)}>
+                    Delete
+                </Button>
+            )
+        }
     ];
     return (<Space direction='vertical' size='large'>
         <DynamicTableContent
