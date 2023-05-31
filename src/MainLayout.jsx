@@ -3,6 +3,7 @@ import { Breadcrumb, Button, Layout, Menu, Typography, theme } from 'antd';
 import { HomeOutlined, PieChartOutlined, UserOutlined } from '@ant-design/icons';
 import { useLocation, Link, Outlet } from 'react-router-dom';
 import AuthContext from './providers/Auth';
+import dbimg from './db.png'
 
 const { Header, Content, Sider } = Layout;
 

@@ -5,11 +5,12 @@ const getAllOrders = async () => {
     return data;
 }
 
-const createOrder = async (iName, iPrice, iPaymentType, iIsOnline, iArea, iDriver) => {
+const createOrder = async (iName, iPrice, iPaymentType, iExecutionDate, iIsOnline, iArea, iDriver) => {
     const order = {
         name: iName,
         price: iPrice,
         paymentType: iPaymentType,
+        executionDate: iExecutionDate,
         isOnline: iIsOnline,
         area: iArea,
         driver: iDriver

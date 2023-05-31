@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button, Input, List, Space, Form, message, Badge, Tooltip } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Input, Space, Form, message } from 'antd';
 import { useLoaderData } from 'react-router-dom';
 
 import axios from 'axios';
@@ -89,6 +88,11 @@ const Customers = () => {
     }
 
     const TaskColumns = [
+        {
+            title: "ID",
+            dataIndex: "id",
+            align: "center",
+        },
         {
             title: "Name",
             dataIndex: "desc",

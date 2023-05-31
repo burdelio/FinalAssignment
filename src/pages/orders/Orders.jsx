@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button, Checkbox, Input, Space, Form, Select, List, Tooltip, Badge, message } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Input, Space, Form, Select, message } from 'antd';
 import { useLoaderData } from 'react-router-dom';
 
 import options from '../../configs/menu';
@@ -36,6 +35,7 @@ const Orders = () => {
         const OrderName = values.Order_name;
         const OrderPrice = values.Order_price;
         const OrderPT = values.Order_PT;
+        const executionDate = new Date();
         const OrderIO = onlineOrder;
         const OrderArea = values.Order_area;
         const OrderDriver = values.Order_driver;
@@ -55,6 +55,7 @@ const Orders = () => {
             name: OrderName,
             price: OrderPrice,
             paymentType: OrderPT,
+            executionDate: executionDate,
             isOnline: OrderIO,
             area: OrderArea,
             driver: OrderDriver
@@ -156,7 +157,13 @@ const Orders = () => {
 
     const OrderColumns = [
         {
+            title: "ID",
+            dataIndex: "id",
+            align: "center",
+        },
+        {
             title: "Name",
+            width: 200,
             dataIndex: "name",
             align: "center",
             editable: true,
@@ -168,9 +175,20 @@ const Orders = () => {
         },
         {
             title: "Payment",
+            width: 200,
             dataIndex: "paymentType",
             align: "center",
             editable: true,
+        },
+        {
+            title: "Date",
+            width: 200,
+            dataIndex: "executionDate",
+            align: "center",
+            render: (text) => {
+                const executionDate = new Date(text);
+                return executionDate.toLocaleString();
+            },
         },
         {
             title: "Online",

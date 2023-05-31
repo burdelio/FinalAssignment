@@ -1,4 +1,4 @@
-import { Empty, Table } from 'antd';
+import { Empty, Table, Badge } from 'antd';
 import EditableCell from './EditableCell';
 import EditableRow from './EditableRow';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -20,6 +20,12 @@ const DynamicTableContent = ({ dataSource, columns, handleCellSave }) => {
                     {text ? <CheckOutlined /> : <CloseOutlined />}
                 </>);
             }
+        }
+
+        if (col.title === "ID") {
+            render = (text) => {
+                return <Badge count={text} />;
+            };
         }
 
         if (!col.editable) {
@@ -49,14 +55,14 @@ const DynamicTableContent = ({ dataSource, columns, handleCellSave }) => {
     return (
         <div>
             <Table
-                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Wypełnij formularz" /> }}
+                locale={{ emptyText: <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Fill the form" /> }}
                 components={components}
                 rowClassName={() => "editable-row"}
                 bordered
                 sticky
                 dataSource={dataSource}
                 columns={mappedCols}
-                style={{ maxWidth: '80%', margin: 'auto' }}
+                style={{ maxWidth: '90%', margin: 'auto' }}
                 pagination={false}
                 scroll={{ x: true }}
             />
